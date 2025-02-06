@@ -60,12 +60,11 @@ func (r *MySQLProductoRepository) EliminarProducto(id int) error {
 }
 
 func (r *MySQLProductoRepository) BuscarPorID(id int) ([]*entities.Producto, error) {
-	
 	rows, err := r.db.Query("SELECT * FROM productos WHERE id_producto = ?", id)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close() 
+	defer rows.Close()
 
 	var productos []*entities.Producto
 	for rows.Next() {
@@ -85,7 +84,6 @@ func (r *MySQLProductoRepository) BuscarPorID(id int) ([]*entities.Producto, err
 		productos = append(productos, prod)
 	}
 
-	
 	if len(productos) == 0 {
 		return nil, fmt.Errorf("no se encontró el producto con ID %d", id)
 	}
