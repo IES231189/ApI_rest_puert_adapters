@@ -14,5 +14,6 @@ func RegisterRoutes(router *gin.Engine, productoController *controller.ProductoC
 		routes.PUT("/", productoController.ActualizarProducto)
 		routes.DELETE("/:id", productoController.EliminarProducto)
 		routes.GET("/:id", productoController.BuscarPorID)
+		routes.POST("/subir-imagen", productoController.SubirImagen)
 	}
 }
