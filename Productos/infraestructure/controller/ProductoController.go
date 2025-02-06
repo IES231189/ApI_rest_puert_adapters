@@ -80,3 +80,22 @@ func (pc *ProductoController) EliminarProducto(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Eliminado"})
 }
+
+func (pc *ProductoController) BuscarPorID(c *gin.Context) {
+
+	id := c.Param("id")
+
+	num, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID no válido"})
+		return
+	}
+
+	product, err := pc.service.BuscarPorID(num)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"producto": product})
+}

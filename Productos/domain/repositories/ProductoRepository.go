@@ -10,4 +10,5 @@ type ProductoRepositories interface{
 	AgregarProducto(producto *entities.Producto) error
 	ActualizarProducto(producto *entities.Producto) error
 	EliminarProducto(id int)error
+	BuscarPorID(id int)([]*entities.Producto , error) 
 }

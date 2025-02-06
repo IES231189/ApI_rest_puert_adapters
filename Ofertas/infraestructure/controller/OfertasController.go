@@ -74,3 +74,22 @@ func (c *OfertaController) EliminarOferta(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Oferta eliminada correctamente"})
 }
+
+func (c *OfertaController) MostrarPorID(ctx *gin.Context) {
+	id := ctx.Param("id")
+
+	num, err := strconv.Atoi(id)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Id no válido"})
+		return
+	}
+
+	ofertas, err := c.service.MostrarPorID(num)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, ofertas)
+}
+

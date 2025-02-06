@@ -4,6 +4,7 @@ import (
 	"APICRUD/Ofertas/domain/entities"
 	"database/sql"
 	"errors"
+	"fmt"
 )
 
 type MysqlOfertasRepository struct {
@@ -79,4 +80,37 @@ func (repo *MysqlOfertasRepository) Eliminar(id int) error {
 		return errors.New("no se encontró la oferta para eliminar")
 	}
 	return nil
+}
+
+func (repo *MysqlOfertasRepository) MostrarPorID(id int) ([]*entities.Ofertas, error) {
+	rows, err := repo.db.Query("SELECT * FROM ofertas WHERE id_oferta = ?", id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var ofertas []*entities.Ofertas
+
+	for rows.Next() {
+
+		oferts := &entities.Ofertas{}
+		if err := rows.Scan(
+			&oferts.Id_oferta,
+			&oferts.Nombre,
+			&oferts.Descripcion,
+			&oferts.Fecha_inicio,
+			&oferts.Fecha_fin,
+		); err != nil {
+			return nil, err
+		}
+
+		ofertas = append(ofertas, oferts)
+	}
+
+	if len(ofertas) == 0 {
+		return nil, fmt.Errorf("no se encontro la oferta")
+	}
+	return ofertas, nil
 }

@@ -4,6 +4,7 @@ import (
 	"APICRUD/Productos/domain/entities"
 	"APICRUD/Productos/domain/repositories"
 	"database/sql"
+	"fmt"
 )
 
 type MySQLProductoRepository struct {
@@ -25,13 +26,13 @@ func (r *MySQLProductoRepository) MostrarProductos() ([]*entities.Producto, erro
 	for rows.Next() {
 		prod := &entities.Producto{}
 		if err := rows.Scan(
-			&prod.Id_producto, 
-			&prod.Nombre, 
-			&prod.Descripcion, 
-			&prod.Precio, 
-			&prod.Stock, 
-			&prod.Imagen, 
-			&prod.Id_categoria, 
+			&prod.Id_producto,
+			&prod.Nombre,
+			&prod.Descripcion,
+			&prod.Precio,
+			&prod.Stock,
+			&prod.Imagen,
+			&prod.Id_categoria,
 			&prod.Fecha_creacion,
 		); err != nil {
 			return nil, err
@@ -56,4 +57,38 @@ func (r *MySQLProductoRepository) ActualizarProducto(producto *entities.Producto
 func (r *MySQLProductoRepository) EliminarProducto(id int) error {
 	_, err := r.db.Exec("DELETE FROM productos WHERE id_producto = ?", id)
 	return err
+}
+
+func (r *MySQLProductoRepository) BuscarPorID(id int) ([]*entities.Producto, error) {
+	
+	rows, err := r.db.Query("SELECT * FROM productos WHERE id_producto = ?", id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close() 
+
+	var productos []*entities.Producto
+	for rows.Next() {
+		prod := &entities.Producto{}
+		if err := rows.Scan(
+			&prod.Id_producto,
+			&prod.Nombre,
+			&prod.Descripcion,
+			&prod.Precio,
+			&prod.Stock,
+			&prod.Imagen,
+			&prod.Id_categoria,
+			&prod.Fecha_creacion,
+		); err != nil {
+			return nil, err
+		}
+		productos = append(productos, prod)
+	}
+
+	
+	if len(productos) == 0 {
+		return nil, fmt.Errorf("no se encontró el producto con ID %d", id)
+	}
+
+	return productos, nil
 }

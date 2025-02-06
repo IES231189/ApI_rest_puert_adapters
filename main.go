@@ -33,6 +33,7 @@ func main() {
 	prodService := productoApp.NuevoProductServices(prodRepo)
 	prodCtrl := productoController.NewProductoController(prodService)
 
+	
 	// Ofertas
 	ofertaRepo := ofertaDatabase.NewMysqlOfertasRepository(db)
 	ofertaService := ofertaApp.NewOfertaService(ofertaRepo)
@@ -40,7 +41,6 @@ func main() {
 
 	router := gin.Default()
 
-	// Registrar rutas
 	productoRoutes.RegisterRoutes(router, prodCtrl)
 	ofertaRoutes.RegisterOfertaRoutes(router, ofertaCtrl)
 
@@ -48,4 +48,6 @@ func main() {
 	if err != nil {
 		log.Fatal("Error al conectar el servidor", err)
 	}
+
+
 }

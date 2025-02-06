@@ -7,5 +7,6 @@ type Ofertas struct{
 	Descripcion string
 	Fecha_inicio string
 	Fecha_fin string
-
 } 
+
+

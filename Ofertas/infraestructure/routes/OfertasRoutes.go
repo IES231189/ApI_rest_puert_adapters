@@ -13,5 +13,6 @@ func RegisterOfertaRoutes(router *gin.Engine, ofertaController *controller.Ofert
 		ofertasGroup.POST("/", ofertaController.CrearOfertas)
 		ofertasGroup.PUT("/", ofertaController.ActualizarOferta)
 		ofertasGroup.DELETE("/:id", ofertaController.EliminarOferta)
+		ofertasGroup.GET("/:id" , ofertaController.MostrarPorID)
 	}
 }

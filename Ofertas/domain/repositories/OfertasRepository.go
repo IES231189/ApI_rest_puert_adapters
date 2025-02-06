@@ -11,4 +11,5 @@ type OfertasRepository interface{
 	CrearOfertas(of * entities.Ofertas)error
 	Actualizar(of * entities.Ofertas) error
 	Eliminar(id int ) error
+	MostrarPorID(id int)([]*entities.Ofertas , error)
 }

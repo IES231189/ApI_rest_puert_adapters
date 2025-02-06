@@ -28,3 +28,8 @@ func (ps *ProductoServices) ActualizarProducto(producto *entities.Producto) erro
 func (ps *ProductoServices) EliminarProducto(id int) error {
 	return ps.repository.EliminarProducto(id)
 }
+
+
+func (ps *ProductoServices) BuscarPorID(id int)([]*entities.Producto , error){
+	return ps.repository.BuscarPorID(id)
+}

@@ -34,5 +34,12 @@ func (Os *OfertaServices) Eliminar( id int) error{
 }
 
 
+func (Os *OfertaServices) MostrarPorID(id int)([]*entities.Ofertas , error){
+	return Os.of.MostrarPorID(id)
+}
+
+
+
+
 
 
