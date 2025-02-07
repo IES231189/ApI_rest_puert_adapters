@@ -6,7 +6,7 @@ type Producto struct {
 	Descripcion    string
 	Precio         float32
 	Stock          int
-	Imagen         string
+	Imagen_url     string
 	Id_categoria   int
 	Fecha_creacion string
 }

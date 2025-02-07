@@ -31,7 +31,7 @@ func (r *MySQLProductoRepository) MostrarProductos() ([]*entities.Producto, erro
 			&prod.Descripcion,
 			&prod.Precio,
 			&prod.Stock,
-			&prod.Imagen,
+			&prod.Imagen_url,
 			&prod.Id_categoria,
 			&prod.Fecha_creacion,
 		); err != nil {
@@ -44,13 +44,13 @@ func (r *MySQLProductoRepository) MostrarProductos() ([]*entities.Producto, erro
 
 func (r *MySQLProductoRepository) AgregarProducto(producto *entities.Producto) error {
 	_, err := r.db.Exec("INSERT INTO productos(nombre, descripcion, precio, stock, imagen_url, id_categoria, fecha_creacion) VALUES (?, ?, ?, ?, ?, ?, ?)",
-		producto.Nombre, producto.Descripcion, producto.Precio, producto.Stock, producto.Imagen, producto.Id_categoria, producto.Fecha_creacion)
+		producto.Nombre, producto.Descripcion, producto.Precio, producto.Stock, producto.Imagen_url, producto.Id_categoria, producto.Fecha_creacion)
 	return err
 }
 
 func (r *MySQLProductoRepository) ActualizarProducto(producto *entities.Producto) error {
 	_, err := r.db.Exec("UPDATE productos SET nombre= ?, descripcion=?, precio=?, stock=?, imagen_url=?, id_categoria=?, fecha_creacion=? WHERE id_producto=?",
-		producto.Nombre, producto.Descripcion, producto.Precio, producto.Stock, producto.Imagen, producto.Id_categoria, producto.Fecha_creacion, producto.Id_producto)
+		producto.Nombre, producto.Descripcion, producto.Precio, producto.Stock, producto.Imagen_url, producto.Id_categoria, producto.Fecha_creacion, producto.Id_producto)
 	return err
 }
 
@@ -75,7 +75,7 @@ func (r *MySQLProductoRepository) BuscarPorID(id int) ([]*entities.Producto, err
 			&prod.Descripcion,
 			&prod.Precio,
 			&prod.Stock,
-			&prod.Imagen,
+			&prod.Imagen_url,
 			&prod.Id_categoria,
 			&prod.Fecha_creacion,
 		); err != nil {

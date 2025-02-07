@@ -31,14 +31,32 @@ func (pc *ProductoController) ListarProductos(c *gin.Context) {
 
 func (pc *ProductoController) AñadirProducto(c *gin.Context) {
 	var producto entities.Producto
+
 	if err := c.ShouldBindJSON(&producto); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "entrada no valida"})
+		errorMsg := fmt.Sprintf("Error al vincular JSON: %v", err)
+		fmt.Println(errorMsg)
+		c.JSON(http.StatusBadRequest, gin.H{"error": errorMsg})
 		return
 	}
 
+	// Validación de datos básicos
+	if producto.Nombre == "" || producto.Precio <= 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Datos del producto incompletos o inválidos"})
+		return
+	}
+
+	if producto.Imagen_url == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "URL de la imagen es necesaria"})
+		return
+	}
+
+	// Registro de depuración antes de la operación
+	fmt.Printf("Producto recibido: %+v\n", producto)
+
 	err := pc.service.AñadirProducto(&producto)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		fmt.Printf("Error al añadir producto: %v\n", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al añadir el producto: " + err.Error()})
 		return
 	}
 
@@ -96,7 +114,7 @@ func (pc *ProductoController) BuscarPorID(c *gin.Context) {
 }
 
 func (pc *ProductoController) SubirImagen(c *gin.Context) {
-	// Obtener el archivo desde la solicitud
+
 	file, _ := c.FormFile("imagen")
 	if file == nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "No se proporcionó ninguna imagen"})
@@ -114,6 +132,7 @@ func (pc *ProductoController) SubirImagen(c *gin.Context) {
 		return
 	}
 
-	// Retornar la URL de la imagen para almacenarla en la base de datos
-	c.JSON(http.StatusOK, gin.H{"imagen_url": savePath})
+	// Retornar la URL completa de la imagen
+	imageURL := fmt.Sprintf("http://localhost:8080/uploads/%s", fileName)
+	c.JSON(http.StatusOK, gin.H{"imagen_url": imageURL})
 }
