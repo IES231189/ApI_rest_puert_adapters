@@ -15,5 +15,5 @@ func NuevoUseCaseCreaProducto(repo repositories.ProductoRepositories)*UseCaseCre
 } 
 
 func (ps *UseCaseCrearProducto) AñadirProducto(producto *entities.Producto) error{
-	ps.repository.AgregarProducto(producto)
+	return ps.repository.AgregarProducto(producto)
 }

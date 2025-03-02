@@ -1,7 +1,7 @@
 package aplication
 
 import(
-	"APICRUD/Productos/domain/entities"
+	
 	"APICRUD/Productos/domain/repositories"
 )
 

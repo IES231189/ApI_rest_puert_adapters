@@ -41,9 +41,6 @@ func main() {
 	ofertaCtrl := ofertaController.NewOfertaController(ofertaService)
 
 	router := gin.Default()
-	//router.RedirectTrailingSlash = false
-	//router.Use(gin.Recovery())
-	//router.Use(gin.Logger())
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:4200"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
