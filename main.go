@@ -41,11 +41,13 @@ func main() {
 	ofertaCtrl := ofertaController.NewOfertaController(ofertaService)
 
 	router := gin.Default()
+
 	//router.RedirectTrailingSlash = false
 	//router.Use(gin.Recovery())
 	//router.Use(gin.Logger())
+
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:4200"},
+		AllowOrigins:     []string{"http://localhost:4200", "http://localhost:64356"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
@@ -55,6 +57,7 @@ func main() {
 
 	productoRoutes.RegisterRoutes(router, prodCtrl)
 	ofertaRoutes.RegisterOfertaRoutes(router, ofertaCtrl)
+	router.Static("/uploads", "./uploads")
 
 	err = router.Run(":8080")
 	if err != nil {
