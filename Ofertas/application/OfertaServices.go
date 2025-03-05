@@ -38,7 +38,13 @@ func (Os *OfertaServices) MostrarPorID(id int)([]*entities.Ofertas , error){
 	return Os.of.MostrarPorID(id)
 }
 
+func (Os *OfertaServices) VerificarNuevasOfertas() ([]*entities.Ofertas, error) {
+	return Os.of.VerificarNuevasOfertas()
+}
 
+func (Os *OfertaServices) VerificarOfertasCaducadas() ([]*entities.Ofertas, error) {
+	return Os.of.VerificarOfertasCaducadas()
+}
 
 
 

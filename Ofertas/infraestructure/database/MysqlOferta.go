@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	//"time"
 )
 
 type MysqlOfertasRepository struct {
@@ -112,5 +113,67 @@ func (repo *MysqlOfertasRepository) MostrarPorID(id int) ([]*entities.Ofertas, e
 	if len(ofertas) == 0 {
 		return nil, fmt.Errorf("no se encontro la oferta")
 	}
+	return ofertas, nil
+}
+
+
+// Verifica si hay nuevas ofertas activas (actuales)
+func (repo *MysqlOfertasRepository) VerificarNuevasOfertas() ([]*entities.Ofertas, error) {
+	query := `
+		SELECT o.id_oferta, o.nombre, o.descripcion, o.fecha_inicio, o.fecha_fin
+		FROM ofertas o
+		JOIN productos_ofertas po ON o.id_oferta = po.id_oferta
+		WHERE NOW() BETWEEN o.fecha_inicio AND o.fecha_fin
+	`
+
+	rows, err := repo.db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var ofertas []*entities.Ofertas
+	for rows.Next() {
+		oferta := &entities.Ofertas{}
+		if err := rows.Scan(&oferta.Id_oferta, &oferta.Nombre, &oferta.Descripcion, &oferta.Fecha_inicio, &oferta.Fecha_fin); err != nil {
+			return nil, err
+		}
+		ofertas = append(ofertas, oferta)
+	}
+
+	if len(ofertas) == 0 {
+		return nil, errors.New("no hay nuevas ofertas activas")
+	}
+
+	return ofertas, nil
+}
+
+// Verifica si alguna oferta ha caducado
+func (repo *MysqlOfertasRepository) VerificarOfertasCaducadas() ([]*entities.Ofertas, error) {
+	query := `
+		SELECT id_oferta, nombre, descripcion, fecha_inicio, fecha_fin
+		FROM ofertas
+		WHERE fecha_fin < NOW()
+	`
+
+	rows, err := repo.db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var ofertas []*entities.Ofertas
+	for rows.Next() {
+		oferta := &entities.Ofertas{}
+		if err := rows.Scan(&oferta.Id_oferta, &oferta.Nombre, &oferta.Descripcion, &oferta.Fecha_inicio, &oferta.Fecha_fin); err != nil {
+			return nil, err
+		}
+		ofertas = append(ofertas, oferta)
+	}
+
+	if len(ofertas) == 0 {
+		return nil, errors.New("no hay ofertas caducadas")
+	}
+
 	return ofertas, nil
 }

@@ -5,6 +5,7 @@ import (
 	"APICRUD/Ofertas/domain/entities"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -93,3 +94,38 @@ func (c *OfertaController) MostrarPorID(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, ofertas)
 }
 
+func (c *OfertaController) WaitNewOffers(ctx *gin.Context) {
+	timeout := time.Now().Add(30 * time.Second) // Máximo tiempo de espera
+	for {
+		ofertas, err := c.service.VerificarNuevasOfertas()
+		if err == nil {
+			ctx.JSON(http.StatusOK, gin.H{"message": "Nuevas ofertas activas", "ofertas": ofertas})
+			return
+		}
+
+		if time.Now().After(timeout) {
+			ctx.JSON(http.StatusNoContent, gin.H{"message": "No hay nuevas ofertas activas"})
+			return
+		}
+
+		time.Sleep(2 * time.Second) // Espera antes de volver a verificar
+	}
+}
+
+func (c *OfertaController) WaitExpiredOffers(ctx *gin.Context) {
+	timeout := time.Now().Add(30 * time.Second) // Maximo tiempo de espera
+	for {
+		ofertas, err := c.service.VerificarOfertasCaducadas()
+		if err == nil {
+			ctx.JSON(http.StatusOK, gin.H{"message": "Ofertas caducadas", "ofertas": ofertas})
+			return
+		}
+
+		if time.Now().After(timeout) {
+			ctx.JSON(http.StatusNoContent, gin.H{"message": "No hay ofertas caducadas"})
+			return
+		}
+
+		time.Sleep(2 * time.Second) // Espera antes de volver a verificar
+	}
+}

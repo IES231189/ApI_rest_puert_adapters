@@ -27,6 +27,7 @@ func (pc *ProductoController) ListarProductos(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, productos)
+	
 }
 
 func (pc *ProductoController) AñadirProducto(c *gin.Context) {
@@ -113,6 +114,8 @@ func (pc *ProductoController) BuscarPorID(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"producto": product})
 }
 
+
+
 func (pc *ProductoController) SubirImagen(c *gin.Context) {
 
 	file, _ := c.FormFile("imagen")
@@ -135,4 +138,5 @@ func (pc *ProductoController) SubirImagen(c *gin.Context) {
 	// Retornar la URL completa de la imagen
 	imageURL := fmt.Sprintf("http://localhost:8080/uploads/%s", fileName)
 	c.JSON(http.StatusOK, gin.H{"imagen_url": imageURL})
+
 }
